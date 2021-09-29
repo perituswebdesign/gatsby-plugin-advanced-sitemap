@@ -164,7 +164,7 @@ const runQuery = (handler, {query, mapping, exclude}) => handler(query).then((r)
     for (let source in r.data) {
         // Check for custom serializer
         if (typeof mapping?.[source]?.serializer === `function`) {
-            if (r.data[source] && Array.isArray(r.data[source].edges)) { 
+            if (r.data[source] && Array.isArray(r.data[source].edges)) {
                 const serializedEdges = mapping[source].serializer(r.data[source].edges);
 
                 if (!Array.isArray(serializedEdges)) {
@@ -176,10 +176,10 @@ const runQuery = (handler, {query, mapping, exclude}) => handler(query).then((r)
 
         // Removing excluded paths
         if (r.data?.[source]?.edges && r.data[source].edges.length) {
-            r.data[source].edges = r.data[source].edges.filter(({node}) => !exclude.some((excludedRoute) => { 
+            r.data[source].edges = r.data[source].edges.filter(({node}) => !exclude.some((excludedRoute) => {
                 const sourceType = node.__typename ? `all${node.__typename}` : source;
                 const slug = (sourceType === `allMarkdownRemark` || sourceType === `allMdx`) || (node?.fields?.slug) ? node.fields.slug.replace(/^\/|\/$/, ``) : node.slug.replace(/^\/|\/$/, ``);
-                
+
                 excludedRoute = typeof excludedRoute === `object` ? excludedRoute : excludedRoute.replace(/^\/|\/$/, ``);
 
                 // test if the passed regular expression is valid
@@ -214,7 +214,7 @@ const serialize = ({...sources} = {}, {site, allSitePage}, {mapping, addUncaught
 
     for (let type in sources) {
         if (mapping?.[type]?.sitemap) {
-            const currentSource = sources[type] ? sources[type] : [];
+            const currentSource = sources[type] ? mapping[type].key ? sources[type][mapping[type].key] : sources[type] : [];
 
             if (currentSource) {
                 sourceObject[mapping[type].sitemap] = sourceObject[mapping[type].sitemap] || [];
